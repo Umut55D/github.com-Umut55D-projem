@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lyrics Finder</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; }
+    input, button { margin: 0.5rem; padding: 0.5rem; }
+    #lyrics { margin-top: 2rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Lyrics Finder</h1>
+  <input type="text" id="artist" placeholder="Artist Name" required>
+  <input type="text" id="song" placeholder="Song Name" required>
+  <button onclick="fetchLyrics()">Get Lyrics</button>
+
+  <div id="lyrics"></div>
+
+  <script>
+    function fetchLyrics() {
+      const artist = document.getElementById('artist').value.trim();
+      const song = document.getElementById('song').value.trim();
+
+      if (!artist || !song) {
+        alert('Please fill both fields!');
+        return;
+      }
+
+      const url = `https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(song)}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.lyrics) {
+            document.getElementById('lyrics').innerText = data.lyrics;
+          } else {
+            document.getElementById('lyrics').innerText = 'Lyrics not found!';
+          }
+        })
+        .catch(error => {
+          document.getElementById('lyrics').innerText = 'An error occurred: ' + error.message;
+        });
+    }
+  </script>
+</body>
+</html>
